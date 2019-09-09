@@ -16,7 +16,14 @@ class wem3162():
         print (r.text)
         self.monitorjsonR=r.text
         self.f.write(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'\r\n'+self.monitorjsonR)
-        return(self.monitorjson)
+        jsonR=json.loads(self.monitorjsonR)
+        voltage=jsonR['data'][0]
+        current=jsonR['data'][1]
+        power=jsonR['data'][2]
+        importEnergy=jsonR['data'][3]
+        exportEnergy=jsonR['data'][4]
+
+        return(voltage,current,power,importEnergy,exportEnergy)
     def close(self):
         self.f.close()
 
@@ -27,7 +34,8 @@ if __name__ =='__main__':
     retryCounter=0
     while(1):
         try:
-            meter.monitorjson()
+            (vol,cur,power,importE,exportE)=meter.monitorjson()
+            print('vol:%d,cur:%d,power:%d,importE:%d,exportE:%d \r\n'%(vol,cur,power,importE,exportE))
             print('test %d times,retryCounter:%d'%(counter,retryCounter))
             print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             counter=counter+1
