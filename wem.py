@@ -12,7 +12,7 @@ class wem3162():
     def monitorjson(self):
         apiurl=self.url+'/monitorjson'
         print (apiurl)
-        r=requests.get(apiurl,headers=self.headers)
+        r=requests.get(apiurl,headers=self.headers,timeout=3)
         print (r.text)
         self.monitorjsonR=r.text
         self.f.write(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')+'\r\n'+self.monitorjsonR)
