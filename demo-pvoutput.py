@@ -3,7 +3,7 @@ import PVOutput
 import json
 meter=wem.wem3162('http://192.168.1.8')
 voltage,current,power,importEnergy,exportEnergy=meter.monitorjson()
-#pv=PVOutput.PVOutputApi('67669','4c5b6575896610b64b125517395b93579281e6e4')
+#pv=PVOutput.PVOutputApi('siteNumber','API-key')
 
 '''
 #pvo = PVOutput.PVOutputApi("deviceId", "apiKey")
