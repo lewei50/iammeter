@@ -52,37 +52,10 @@ class PVOutputApi:
             data = data + ("&%s=%s" % (key, value))
         print(data[1:])
         self.call("https://pvoutput.org/service/r2/addstatus.jsp", data[1:])
-'''
-    def add_day(self, data, temperatures):
-        # Send day data in batches of 30.
-        for chunk in [ data[i:i + 30] for i in range(0, len(data), 30) ]:
-            readings = []
-            for reading in chunk:
-                dt = reading['dt']
-                fields = [
-                    dt.strftime('%Y%m%d'),
-                    dt.strftime('%H:%M'),
-                    str(round(reading['eday_kwh'] * 1000)),
-                    str(reading['pgrid_w'])
-                ]
 
-                if temperatures is not None:
-                    fields.append('')
-                    fields.append('')
-                    temperature = list(filter(lambda x: dt.timestamp() > x['time'], temperatures))[-1]
-                    fields.append(str(temperature['temperature']))
-
-                readings.append(",".join(fields))
-
-            payload = {
-                'data' : ";".join(readings)
-            }
-
-            self.call("https://pvoutput.org/service/r2/addbatchstatus.jsp", payload)
-'''
     def call(self, url, payload):
-        logging.debug(payload)
         
+        logging.debug(payload)
         headers = {
             'X-Pvoutput-Apikey' : self.m_api_key,
             'X-Pvoutput-SystemId' : self.m_system_id,
@@ -113,3 +86,32 @@ class PVOutputApi:
             time.sleep(i ** 3)
         else:
             logging.error("Failed to call PVOutput API")
+'''
+    def add_day(self, data, temperatures):
+        # Send day data in batches of 30.
+        for chunk in [ data[i:i + 30] for i in range(0, len(data), 30) ]:
+            readings = []
+            for reading in chunk:
+                dt = reading['dt']
+                fields = [
+                    dt.strftime('%Y%m%d'),
+                    dt.strftime('%H:%M'),
+                    str(round(reading['eday_kwh'] * 1000)),
+                    str(reading['pgrid_w'])
+                ]
+
+                if temperatures is not None:
+                    fields.append('')
+                    fields.append('')
+                    temperature = list(filter(lambda x: dt.timestamp() > x['time'], temperatures))[-1]
+                    fields.append(str(temperature['temperature']))
+
+                readings.append(",".join(fields))
+
+            payload = {
+                'data' : ";".join(readings)
+            }
+
+            self.call("https://pvoutput.org/service/r2/addbatchstatus.jsp", payload)
+'''
+ 
