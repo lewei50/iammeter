@@ -10,7 +10,7 @@ one phase(wem3162 wem3080) meter response
 print (meter.monitorjson())
 (vol,cur,power,importE,exportE)=meter.json2parameter()
 print ("vol:%dV\r\ncur:%fA\r\npower:%dw\r\nimportEnergy:%fKWH\r\nexportEnergy:%fKWH\r\n"%(vol,cur,power,importE,exportE))
-#pv=PVOutput.PVOutputApi('67669','4c5b6575896610b64b125517395b93579281e6e4')
+pv=PVOutput.PVOutputApi('siteNumber','api-key')
 
 '''
 #pvo = PVOutput.PVOutputApi("deviceId", "apiKey")
@@ -26,4 +26,4 @@ net_flag)
 #pvo.add_status(100,200,None,None,None,None,None,None)
 '''
 
-#pv.add_status(,2000,None,None,None,220,1,None)
+pv.add_status(importE,power,None,None,None,vol,1,None)
