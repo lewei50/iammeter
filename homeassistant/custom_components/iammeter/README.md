@@ -8,11 +8,11 @@ To use the sensors in your installation, add the following to your configuration
 
 # Example configuration.yaml entry
 ```yaml
-`# Example configuration.yaml entry
+# Example configuration.yaml entry
 sensor:
   - platform: iammeter
     host: IP_ADDRESS
-    name: your device name`
+    name: your device name
 
 CONFIGURATION VARIABLES
 
@@ -22,3 +22,4 @@ The IP address of your iMeter system.
 
 name
 (string)(Required)
+```
