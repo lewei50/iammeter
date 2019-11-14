@@ -22,4 +22,8 @@ The IP address of your iMeter system.
 
 name
 (string)(Required)
+
+
+model
+(string)(Optional): WEM3162/WEM3080/WEM3080T
 ```
