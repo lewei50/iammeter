@@ -1,0 +1,8 @@
+{
+    "domain": "iammeter",
+    "name": "IamMeter",
+    "documentation": "",
+    "requirements": [],
+    "dependencies": [],
+    "codeowners": ["@yangbo1979"]
+  }
