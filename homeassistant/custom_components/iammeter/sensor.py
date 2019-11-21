@@ -217,7 +217,7 @@ class WEM3080T(IamMeter):
 
         'ExportGrid_A':             (0,4, 'kWh'),
         'Frequency_A':              (0,5, 'Hz'),
-        'PF_A':                     (0,6, '%'),
+        'PF_A':                     (0,6, ''),
 
         'Voltage_B':                (1,0, 'V'),
         'Current_B':                (1,1, 'A'),
@@ -226,7 +226,7 @@ class WEM3080T(IamMeter):
 
         'ExportGrid_B':             (1,4, 'kWh'),
         'Frequency_B':              (1,5, 'Hz'),
-        'PF_B':                     (1,6, '%'),
+        'PF_B':                     (1,6, ''),
         
         'Voltage_C':                (2,0, 'V'),
         'Current_C':                (2,1, 'A'),
@@ -235,7 +235,7 @@ class WEM3080T(IamMeter):
 
         'ExportGrid_C':             (2,4, 'kWh'),
         'Frequency_C':              (2,5, 'Hz'),
-        'PF_C':                     (2,6, '%'),
+        'PF_C':                     (2,6, ''),
     }
     
     @staticmethod
