@@ -10,4 +10,4 @@ This is a HTTP server demo for WEM3080 serial wifi energy meter
     
     Open iMeter settings
     Set runmode to 'http'
-    Set address to '{your IP address}/upload'
+    Set address to '{your IP address}:8000/upload'
