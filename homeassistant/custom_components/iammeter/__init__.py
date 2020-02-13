@@ -1,1 +1,1 @@
-"""do nothing"""
+"""Support for IamMeter Devices."""
