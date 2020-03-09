@@ -41,7 +41,9 @@ name:
 
 ## Checking the integration
 If you configured home assistant correctly and the custom component was well installed, you'see see the following in the states list:
+
 ![GitHub Logo](doc_images/States.png)
+
 if the sensors don't show up, try restarting the host of home assistant.
 
 ## Sensors
@@ -86,4 +88,39 @@ Sensors available in the library:
 | wem3080t_pf_c           | kWh  | C phase power factor |
 
 
-## Entities
+## Adding the sensors to the Lovelace UI  
+Here is sample code to add the sensors to the UI:
+
+```json
+cards:
+  - cards:
+      - entity: sensor.iammeter_current_a
+        graph: line
+        name: CurrentA
+        type: sensor
+      - entity: sensor.iammeter_current_b
+        graph: line
+        name: Current B
+        type: sensor
+      - entity: sensor.iammeter_current_c
+        graph: line
+        name: Current C
+        type: sensor
+    type: horizontal-stack
+  - cards:
+      - entity: sensor.iammeter_importenergy_a
+        graph: line
+        name: kWh A
+        type: sensor
+      - entity: sensor.iammeter_importenergy_b
+        graph: line
+        name: kWh B
+        type: sensor
+      - entity: sensor.iammeter_importenergy_c
+        graph: line
+        name: kWh C
+        type: sensor
+    type: horizontal-stack
+type: vertical-stack
+
+```
