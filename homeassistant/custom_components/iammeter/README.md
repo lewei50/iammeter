@@ -39,6 +39,11 @@ name:
   type: string
 {% endconfiguration %}
 
+## Checking the integration
+If you configured home assistant correctly and the custom component was well installed, you'see see the following in the states list:
+![GitHub Logo](doc_images/States.png)
+if the sensors don't show up, try restarting the host of home assistant.
+
 ## Sensors
 
 Sensors available in the library: 
@@ -79,3 +84,6 @@ Sensors available in the library:
 | wem3080t_exportgrid_c   | kWh  | C phase export energy |
 | wem3080t_frequency_c    | kWh  | C phase frequency |
 | wem3080t_pf_c           | kWh  | C phase power factor |
+
+
+## Entities
