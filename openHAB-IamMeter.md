@@ -7,8 +7,8 @@ This Wi-Fi Energy Meter binding is used to get the real data from  Wi-Fi energy 
 
 | Device                                                       | Feature                              | pic                       |
 | :----------------------------------------------------------- | ------------------------------------ | ------------------------- |
-| [WEM3080](https://www.iammeter.com/doc/iammeter/wem3080-quickstart.html) | 1phase,din-rail,bi-directional Wi-Fi | ![](b1-1587012456364.png) |
-| [WEM3080T](https://www.iammeter.com/doc/iammeter/wem3080t-quickstart.html) | 3phase,din-rail,bi-directional Wi-Fi | ![](b2.png)               |
+| [WEM3080](https://www.iammeter.com/doc/iammeter/wem3080-quickstart.html) | 1phase,din-rail,bi-directional Wi-Fi | ![](https://cdn.iammeter.com/content/em2020/images/b1.png) |
+| [WEM3080T](https://www.iammeter.com/doc/iammeter/wem3080t-quickstart.html) | 3phase,din-rail,bi-directional Wi-Fi | ![](https://cdn.iammeter.com/content/em2020/images/b2.png)               |
 
 
 
