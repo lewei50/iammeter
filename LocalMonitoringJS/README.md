@@ -2,7 +2,7 @@
 
 [Introduction](#introduction)
 
-​	[why we do this](#why we do this )
+[why we do this](#why we do this )
 
 # Introduction
 
