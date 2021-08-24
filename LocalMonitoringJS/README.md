@@ -12,6 +12,3 @@ You can customize its function easily if you are also familiar with JavaScript.
 
 [LocalMonitoringJS](https://github.com/lewei50/iammeter/tree/master/LocalMonitoringJS)
 
-# tools
-
-Some tools that can be used in IAMMETER system and products.
