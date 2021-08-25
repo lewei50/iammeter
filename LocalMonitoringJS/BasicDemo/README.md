@@ -27,9 +27,11 @@ Then, you need modify the config.js, replace the configuration with yours. This 
 
 ## Replace the SN with yours
 
-
+Replace the sn in "config.js" with your own. 
 
 ## Type definition
+
+ "type" in "config.js"
 
 3: 3phase meter (WEM3080T)
 
@@ -37,7 +39,7 @@ Then, you need modify the config.js, replace the configuration with yours. This 
 
 ## items definition
 
-Select the parameter you want to show in the chart.
+Set the array of items, select the parameter you want to show in the chart.
 
 ```
 This is Data format 
@@ -86,9 +88,15 @@ SN:29C9F55D ,3phase meter, show phaseB active power and phase C active power in 
 
 ## username&password
 
+Input your own MQTT username and password here.
+
+![image-20210825180802295](https://leweidoc.oss-cn-hangzhou.aliyuncs.com/lewei50/img/iammeter/tmpliu/tmpimage-20210825180802295.png)
+
 
 
 # open the Basic.html
+
+![image-20210825180922014](https://leweidoc.oss-cn-hangzhou.aliyuncs.com/lewei50/img/iammeter/tmpliu/tmpimage-20210825180922014.png)
 
 
 
