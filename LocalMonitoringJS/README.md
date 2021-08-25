@@ -6,9 +6,7 @@
 
 # Introduction
 
-An IAMMETER local monitor web page that was developed by JavaScript. 
 
-You can customize its function easily if you are also familiar with JavaScript.
 
 ![image-20210825104453255](https://leweidoc.oss-cn-hangzhou.aliyuncs.com/lewei50/img/iammeter/tmpliu/tmpimage-20210825104453255.png)
 
@@ -17,7 +15,15 @@ You can customize its function easily if you are also familiar with JavaScript.
 Although we have try to integrated more UI useful view in IAMMETER-cloud,it can not cover all requirements.
 So we have make this project,you can easily develop and customize your own monitor view, only by JS code.
 
+Ex:
+
+- Plot all power values in one chart.
+- Display the instant value in a different color when it exceeds the alarm value.
+- ...
+
 ## who is this for
+
+IAMMETER-cloud user, familiar with JavaScript, has extra monitor view requirements.
 
 ## Prepared before
 
@@ -28,7 +34,9 @@ Please
 
 
 
-# Basic
+# Basic demo
+
+[BasicDemo](https://github.com/lewei50/iammeter/tree/master/LocalMonitoringJS/BasicDemo)
 
 This is a simple demo to show how to use the local monitoring webpage.
 
