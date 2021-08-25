@@ -1,10 +1,27 @@
-[toc]
+* [Modify the "config\.js"](#modify-the-configjs)
+  
+  * [Replace the SN with yours](#replace-the-sn-with-yours)
+  * [Type definition](#type-definition)
+  * [items definition](#items-definition)
+  * [username&amp;password](#usernamepassword)
+  
+* [open the Basic\.html](#open-the-basichtml)
 
-Firstly , you should download this folder. 
+  
 
-Then, you need modify the config.js, replace the configuration with yours. This is the main work for you to use this demo. 
+Three step to use this demo
+
+1. Firstly , you should download this folder. 
+
+2. [modify the "config.js"](#modify-the-configjs)
+
+3. [open the Basic\.html](#open-the-basichtml)
+
+   
 
 # Modify the "config.js"
+
+Then, you need modify the config.js, replace the configuration with yours. This is the main work for you to use this demo. 
 
 ![image-20210825125537177](https://leweidoc.oss-cn-hangzhou.aliyuncs.com/lewei50/img/iammeter/tmpliu/tmpimage-20210825125537177.png)
 
