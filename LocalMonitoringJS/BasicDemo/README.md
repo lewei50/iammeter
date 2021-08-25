@@ -9,7 +9,7 @@
 
   
 
-Three step to use this demo
+Three steps to use this demo
 
 1. Firstly , you should download this folder. 
 
@@ -100,7 +100,9 @@ Input your own MQTT username and password here.
 
 
 
+You can also replace the logo pic in the html.
 
+![image-20210825184812938](https://leweidoc.oss-cn-hangzhou.aliyuncs.com/lewei50/img/iammeter/tmpliu/tmpimage-20210825184812938.png)
 
 
 
