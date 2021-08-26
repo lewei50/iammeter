@@ -14,4 +14,4 @@ You can customize its function easily if you are also familiar with JavaScript.
 
 # tools
 
-Some tools that can be used in IAMMETER system and products.
+Some code that can be used in IAMMETER system and products. This folder has nothing to do with "LocalMonitoringJS"
