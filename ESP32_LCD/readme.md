@@ -1,4 +1,11 @@
-[toc]
+- [ How to use it](#how-to-use-it)
+  - [Configuration of the device](#configuration-of-the-device)
+  - [Screen display](#screen-display)
+  - [3.Links to related resources](#3links-to-related-resources)
+- [Price  \&\& How to get it](#price---how-to-get-it)
+  - [Buy it](#buy-it)
+  - [Get it for free](#get-it-for-free)
+
 
 This is an open-source project, using a ESP32+LCD(LVGL).
 Refresh the data of the IAMMETER`s energy meter locally.
