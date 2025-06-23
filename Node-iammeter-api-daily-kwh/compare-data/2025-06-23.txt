@@ -1,0 +1,1 @@
+{"sn":"59C9AB8D","generation_today":13.9,"export_today":0,"consumption_today":0,"self_use_rate":100,"timestamp":"2025-06-23T08:21:53.527Z"}
