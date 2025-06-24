@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Compare Ranking - IAMMETER</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f6f8;
+    }
+    h1 {
+      color: #0078d4;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #0078d4;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="title">📊 Compare Ranking</h1>
+
+  <table id="rankTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>SN</th>
+        <th>Generation (kWh)</th>
+        <th>Consumption (kWh)</th>
+        <th>Export (kWh)</th>
+        <th>Self-use Rate (%)</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+  
+  function getLocalDate() {
+  const now = new Date();
+  const pad = n => String(n).padStart(2, "0");
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+  
+  async function loadRanking() {
+
+  const today = getLocalDate();
+  document.getElementById("title").innerText = `📊 Compare Ranking - ${today}`;
+      const res = await fetch(`/api/compare/rank/${today}`);
+      const data = await res.json();
+
+      const tbody = document.querySelector("#rankTable tbody");
+      tbody.innerHTML = "";
+
+      // 排序
+      const sorted = data.sort((a, b) => b.generation_today - a.generation_today);
+
+sorted.forEach((item, idx) => {
+  const maskedSN = item.sn ? item.sn.slice(0, 4) + "***" : "-";
+
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${idx + 1}</td>
+    <td>${maskedSN}</td>
+    <td>${item.generation_today}</td>
+    <td>${item.consumption_today}</td>
+    <td>${item.export_today}</td>
+    <td>${item.self_use_rate}</td>
+  `;
+  tbody.appendChild(tr);
+});
+    }
+
+    loadRanking();
+  </script>
+</body>
+</html>

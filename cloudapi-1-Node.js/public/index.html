@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IAMMETER Realtime Data</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: auto;
+      padding: 30px;
+      background: #f3f6f9;
+    }
+    h1 {
+      color: #0078d4;
+    }
+    .tab-button {
+      padding: 10px 15px;
+      cursor: pointer;
+      display: inline-block;
+      background: #ddd;
+      margin-right: 5px;
+    }
+    .tab-button.active {
+      background: #0078d4;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 20px;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .data-box {
+      background: #fff;
+      padding: 10px 15px;
+      margin: 10px 0;
+      border-left: 4px solid #0078d4;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .label {
+      font-weight: bold;
+    }
+    .value {
+      float: right;
+    }
+    .phase-box {
+      width: 100%;
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid #0078d4;
+    }
+    .phase-header-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .source-selector {
+      font-weight: normal;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ IAMMETER Realtime Data Viewer</h1>
+
+  <div>
+    <div class="tab-button active" onclick="showTab('setting')">Settings</div>
+    <div class="tab-button" onclick="showTab('data')">Data</div>
+    <div class="tab-button" onclick="showTab('summary')">Summary</div>
+  </div>
+
+  <div id="tab-setting" class="tab-content active">
+    <label>Meter SN:</label><br>
+    <input type="text" id="settingSN" placeholder="e.g. F3938A6B" /><br>  
+
+    <label>API Token:</label><br>
+    <input type="text" id="settingToken" placeholder="e.g. abc123..." /><br>
+
+    <button onclick="saveSettings()">Save Settings</button>
+    <button style="margin-left:10px;" onclick="useDemo()">Use Demo</button>
+  <p> please input your sn and token here for calculation,or click "use demo" </p>
+
+  </div>
+
+  <div id="tab-data" class="tab-content">
+    <div style="margin: 10px 0; font-style: italic; color:red;">Please select the Source for each phase(inverter or grid),then click "Summary"</div>
+    <div id="phaseContainer"></div>
+    <div class="data-box"><span class="label">RTC Time</span> <span class="value" id="utcTime">-</span></div>
+  </div>
+
+  <div id="tab-summary" class="tab-content">
+    <div class="data-box"><span class="label">Daily Generation</span> <span class="value" id="dailyGeneration">-</span></div>
+    <div class="data-box"><span class="label">Daily Grid Export</span> <span class="value" id="dailyExport">-</span></div>
+    <div class="data-box"><span class="label">Daily Consumption</span> <span class="value" id="dailyConsumption">-</span></div>
+    <div class="data-box"><span class="label">Self-Consumption Rate</span> <span class="value" id="selfUseRate">-</span></div>
+    <div style="margin-top: 20px;">
+  <button onclick="submitCompareData()">Compare Now</button>
+  <a href="/compare.html" target="_blank">
+    <button style="margin-left:10px;">View Ranking</button>
+  </a>
+</div>
+  </div>
+
+  <script>
+    let currentSN = "";
+    let currentToken = "";
+    const phaseSources = {};
+    let latestDailyData = {};
+    function restorePhaseSourcesToObject() {
+      ["A", "B", "C"].forEach(phase => {
+        const saved = localStorage.getItem(`source-${phase}`);
+        if (saved) {
+          phaseSources[phase] = saved; // 👈 直接更新 phaseSources 对象
+        }
+      });
+    }
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`.tab-button[onclick*="${tabName}"]`).classList.add('active');
+      document.getElementById(`tab-${tabName}`).classList.add('active');
+
+      if (tabName === 'data') loadAll();
+      if (tabName === 'summary') 
+      { 
+        restorePhaseSourcesToObject();
+        calculateSummary();
+      }
+      
+    }
+function useDemo() {
+  const demoSN = "59C9AB8D";
+  const demoToken = "3b30b190ba4a49e1b81e8ff1c1f2d2ff";
+
+  document.getElementById("settingSN").value = demoSN;
+  document.getElementById("settingToken").value = demoToken;
+
+  // 可选：保存到本地，并直接切换到 Data 页签
+  localStorage.setItem("sn", demoSN);
+  localStorage.setItem("token", demoToken);
+  currentSN = demoSN;
+  currentToken = demoToken;
+
+  alert("Demo SN and token have been filled in.");
+  showTab("data");
+}
+
+function saveSettings() {
+  const sn = document.getElementById("settingSN").value.trim();
+  const token = document.getElementById("settingToken").value.trim();
+
+  if (!sn || !token) {
+    alert("Please enter both SN and token.");
+    return;
+  }
+
+  // 保存到本地浏览器
+  localStorage.setItem("sn", sn);
+  localStorage.setItem("token", token);
+  currentSN = sn;
+  currentToken = token;
+  alert("save sucessfully");
+    showTab("data");
+  /* 同时发送到后台保存
+  fetch("/api/save-config", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ sn, token })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Failed to save to server");
+    }
+    return response.text(); // 服务器可返回 "OK" 或其他文本
+  })
+  .then(result => {
+    alert("Settings saved locally and sent to server.");
+    showTab("data");
+  })
+  .catch(error => {
+    console.error("Error sending to server:", error);
+    alert("Settings saved locally, but failed to send to server.");
+    showTab("data");
+  });*/
+}
+
+    function loadSettings() {
+      currentSN = localStorage.getItem("sn") || "";
+      currentToken = localStorage.getItem("token") || "";
+      document.getElementById("settingSN").value = currentSN;
+      document.getElementById("settingToken").value = currentToken;
+    }
+
+    function updatePhaseSources() {
+      document.querySelectorAll('.source-selector input:checked').forEach(input => {
+        const name = input.name;
+        const phase = name.split("-")[1];
+        phaseSources[phase] = input.value;
+        localStorage.setItem(`source-${phase}`, input.value);
+      });
+    }
+
+    function restorePhaseSources() {
+      ["A", "B", "C"].forEach(phase => {
+        const saved = localStorage.getItem(`source-${phase}`);
+        if (saved) {
+          const input = document.querySelector(`input[name='source-${phase}'][value='${saved}']`);
+          if (input) input.checked = true;
+        }
+      });
+    }
+
+    async function loadAll() {
+      if (!currentSN || !currentToken) return alert("Please configure SN and token first.");
+      const today = new Date().toISOString().split('T')[0];
+      const container = document.getElementById("phaseContainer");
+      container.innerHTML = "";
+
+      try {
+        const res1 = await fetch(`/api/data/${currentSN}?token=${currentToken}`);
+        const data1 = await res1.json();
+
+        const res2 = await fetch(`/api/daily-energy/${currentSN}?date=${today}&token=${currentToken}`);
+        const data2 = await res2.json();
+        latestDailyData = data2.phases || {};
+
+        if (!data1.snapshot || !Array.isArray(data1.snapshot)) throw new Error("Unexpected data format.");
+
+        data1.snapshot.forEach((v, idx) => {
+          const phase = ["A", "B", "C"][idx] || `P${idx + 1}`;
+          const box = document.createElement("div");
+          box.className = "phase-box";
+
+          const daily = latestDailyData[phase] || { importUsedKwh: 0, exportUsedKwh: 0 };
+
+          box.innerHTML = `
+            <div class="phase-header-line">
+              <div>Phase ${phase}</div>
+              <div class="source-selector">
+                Source:
+                <label><input type="radio" name="source-${phase}" value="inverter"> Inverter</label>
+                <label><input type="radio" name="source-${phase}" value="grid"> Grid</label>
+                <label><input type="radio" name="source-${phase}" value="load"> Load</label>
+                <label><input type="radio" name="source-${phase}" value="nc"> NC</label>
+              </div>
+            </div>
+            Voltage: ${v[0]} V<br>
+            Current: ${v[1]} A<br>
+            Power: ${v[2]} W<br>
+            Import Energy: ${v[3]} kWh<br>
+            Export Energy: ${v[4]} kWh<br>
+            Daily Import: ${daily.importUsedKwh.toFixed(3)} kWh<br>
+            Daily Export: ${daily.exportUsedKwh.toFixed(3)} kWh
+          `;
+
+          container.appendChild(box);
+        });
+
+        restorePhaseSources();
+        document.querySelectorAll('.source-selector input').forEach(i => i.addEventListener('change', updatePhaseSources));
+
+        document.getElementById("utcTime").innerText = data1.utcTime || new Date().toLocaleString();
+      } catch (err) {
+        alert("Failed to retrieve data: " + err.message);
+        console.error(err);
+      }
+    }
+
+    async function calculateSummary() {
+      const today = new Date().toISOString().split('T')[0];
+      try {
+        const data2 = latestDailyData;
+
+        let totalConsumption = 0;
+        let totalExport = 0;
+        let totalInverter = 0;
+
+        for (const p in data2) {
+          const source = phaseSources[p] || "nc";
+          const importKwh = data2[p].importUsedKwh || 0;
+          const exportKwh = data2[p].exportUsedKwh || 0;
+
+          if (source === "grid") {
+            totalConsumption += importKwh;
+            totalExport += exportKwh;
+          } else if (source === "inverter") {
+            totalInverter += importKwh;
+          }
+        }
+
+        const selfUse = totalInverter - totalExport;
+        const rate = totalInverter > 0 ? (selfUse / totalInverter * 100).toFixed(1) : "-";
+
+        document.getElementById("dailyGeneration").innerText = totalInverter.toFixed(3);
+        document.getElementById("dailyExport").innerText = totalExport.toFixed(3);
+        document.getElementById("dailyConsumption").innerText = totalConsumption.toFixed(3);
+        document.getElementById("selfUseRate").innerText = isNaN(rate) ? "-" : rate + "%";
+
+      } catch (err) {
+        alert("Failed to calculate summary: " + err.message);
+        console.error(err);
+      }
+    }
+
+async function submitCompareData() {
+  if (!currentSN) {
+    alert("SN is not configured.");
+    return;
+  }
+
+  const generation = parseFloat(document.getElementById("dailyGeneration").innerText) || 0;
+  const exportVal = parseFloat(document.getElementById("dailyExport").innerText) || 0;
+  const consumption = parseFloat(document.getElementById("dailyConsumption").innerText) || 0;
+  const selfUseText = document.getElementById("selfUseRate").innerText || "-";
+  const selfUseRate = selfUseText.replace("%", "") || "-";
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const payload = {
+    sn: currentSN,
+    date: today,
+    generation_today: generation,
+    export_today: exportVal,
+    consumption_today: consumption,
+    self_use_rate: selfUseRate
+  };
+
+  try {
+    const res = await fetch("/api/compare", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error("Failed to submit data");
+
+    const result = await res.json();
+
+    alert(`✅ Data submitted!\n
+You are today's #${result.user_position} submitter.\n
+Generation rank: ${result.generation_rank}\n
+Consumption rank: ${result.consumption_rank}\n
+Export rank: ${result.export_rank}\n
+Self-use rate rank: ${result.self_use_rate_rank}`);
+/*
+    if (confirm("Do you want to view today's full ranking?")) {
+     window.open("/compare.html", "_blank");
+    }
+*/
+     window.open("/compare.html", "_blank");
+  } catch (err) {
+    alert("❌ Submission failed: " + err.message);
+    console.error(err);
+  }
+}
+
+
+
+    window.onload = () => {
+      loadSettings();
+      showTab("setting");
+    }
+  </script>
+</body>
+</html>
