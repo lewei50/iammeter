@@ -39,3 +39,5 @@ Below is an example of the server running under PM2:
 # demo
 
 http://laoliu.iammeter.com:3000/
+
+[About WattBattle](https://www.iammeter.com/blog/WattBattle-202506)
