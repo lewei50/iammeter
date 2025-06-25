@@ -1,8 +1,10 @@
 This project primarily consists of demo codes developed around the [IAMMETER meter API](https://www.iammeter.com/newsshow/blog-fw-features), the [WPC3700 Power Adjustment Device API](https://www.iammeter.com/newsshow/api-wpc3700), and the [IAMMETER-Cloud API](https://www.iammeter.com/docs/system-api), aiming to help users better understand how to use these APIs.
 
-# cloudapi-1-Node.js
+# WattBattle
 
 A Node.js script that calls the [IAMMETER-Cloud API](https://www.iammeter.com/docs/system-api) to analyze the per-phase generation data of a meter for the current day, based on the meter's SN.
+
+![image-20250624183303999](https://iammeterglobal.oss-accelerate.aliyuncs.com/img/image-20250624183303999.png)
 
 # Tools
 
