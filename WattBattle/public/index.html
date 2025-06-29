@@ -64,6 +64,10 @@
       font-weight: normal;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+
 </head>
 <body>
   <h1>⚡ IAMMETER Realtime Data Viewer</h1>
@@ -96,13 +100,23 @@
   <div id="tab-summary" class="tab-content">
     <div class="data-box"><span class="label">Daily Generation</span> <span class="value" id="dailyGeneration">-</span></div>
     <div class="data-box"><span class="label">Daily Grid Export</span> <span class="value" id="dailyExport">-</span></div>
-    <div class="data-box"><span class="label">Daily Consumption</span> <span class="value" id="dailyConsumption">-</span></div>
+    <div class="data-box"><span class="label">Daily Grid Consumption</span> <span class="value" id="dailyConsumption">-</span></div>
     <div class="data-box"><span class="label">Self-Consumption Rate</span> <span class="value" id="selfUseRate">-</span></div>
     <div style="margin-top: 20px;">
   <button onclick="submitCompareData()">Compare Now</button>
   <a href="/compare.html" target="_blank">
     <button style="margin-left:10px;">View Ranking</button>
   </a>
+  <div style="display: flex; justify-content: space-between;">
+  <div>
+  <h3>Self-Use vs Feed-in</h3>
+  <canvas id="selfUsePieChart" width="300" height="300"></canvas>
+  </div>
+  
+  <div>
+    <h3>To grid Vs From Grid</h3>
+    <canvas id="barGridVsExport"></canvas>
+  </div>
 </div>
   </div>
 
@@ -302,6 +316,9 @@ function saveSettings() {
         document.getElementById("dailyExport").innerText = totalExport.toFixed(3);
         document.getElementById("dailyConsumption").innerText = totalConsumption.toFixed(3);
         document.getElementById("selfUseRate").innerText = isNaN(rate) ? "-" : rate + "%";
+        drawSelfUsePieChart(totalInverter, totalExport);
+        drawGridVsExportBarChart(totalConsumption, totalExport);
+
 
       } catch (err) {
         alert("Failed to calculate summary: " + err.message);
@@ -359,6 +376,93 @@ Self-use rate rank: ${result.self_use_rate_rank}`);
     alert("❌ Submission failed: " + err.message);
     console.error(err);
   }
+}
+let selfUseChartInstance = null;
+let consumptionChartInstance = null;
+
+function drawSelfUsePieChart(solar_kwh, sell_kwh) {
+    const self_use = Math.max(0, solar_kwh - sell_kwh);
+    const feed_in = sell_kwh;
+    const total = self_use + feed_in;
+
+    const ctx = document.getElementById('selfUsePieChart').getContext('2d');
+
+    if (selfUseChartInstance) {
+        selfUseChartInstance.destroy();
+    }
+
+    selfUseChartInstance = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Self-Use', 'Feed-in'],
+            datasets: [{
+                data: [self_use, feed_in],
+                backgroundColor: ['#36A2EB', '#FFCE56'],
+            }]
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                datalabels: {
+                    color: '#000',
+                    formatter: function(value) {
+                        const percent = (value / total * 100).toFixed(1);
+                        return `${percent}% (${value.toFixed(2)} kWh)`;
+
+
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+let barChartInstance = null;
+
+function drawGridVsExportBarChart(grid_import, export_energy) {
+    const ctx = document.getElementById('barGridVsExport').getContext('2d');
+
+    if (barChartInstance) {
+        barChartInstance.destroy();
+    }
+
+    barChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Grid Consumption', 'Exported Energy'],
+            datasets: [{
+                label: 'kWh',
+                data: [grid_import, export_energy],
+                backgroundColor: ['#FF6384', '#36A2EB']
+            }]
+        },
+        options: {
+            responsive: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Energy (kWh)'
+                    }
+                }
+            },
+            plugins: {
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: function(value) {
+                        return value.toFixed(2) + ' kWh';
+                    },
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
 }
 
 
